@@ -1,0 +1,246 @@
+<html>
+
+<head>
+    <title>Autocomplete Text Editor</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:100,200,300,400,500,600,700,800,900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Anton|Fredoka+One|Liu+Jian+Mao+Cao|Merriweather:300i,400,900|Raleway:400,700,700i|Roboto:300i,400,900|Ubuntu:300i,400,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="{{url_for('static',filename='html2pdf.bundle.min.js')}}"></script>
+    <link href="{{url_for('static',filename='main.css')}}" rel="stylesheet" type="text/css">
+</head>
+
+<body id="body">
+    <div id="notsupport" style="display: none;">
+        <div class="content">
+            <div class="text-center">
+                <img src="{{url_for('static',filename='icon.png')}}" alt="icon" class="icon">
+                <br>
+                <br>
+                <div class="intro">Autocomplete Text Editor</div>
+                <br>
+                <div class="short-exp">Uh oh! We don't support your screen resolution yet, try using on laptop </div>
+                <br>
+            </div>
+        </div>
+    </div>
+
+    <div id="loader">
+        <div class="content">
+            <div class="text-center">
+                <img src="{{url_for('static',filename='icon.png')}}" alt="icon" class="icon">
+                <br>
+                <br>
+                <div class="intro">Autocomplete Text Editor</div>
+                <br>
+                <div class="short-exp">Hang on! Loading...</div>
+            </div>
+
+            <br>
+            <div class="progress">
+                <div class="indeterminate"></div>
+            </div>
+        </div>
+    </div>
+    <div id="ui">
+        <div class="banner">
+            <div class="text-center top"><span id="title">Untitled</span> - Autocomplete Text Editor</div>
+            <div class="layout">
+                <span class="buttons" id="elem1"><span class="button text">&nbsp;File&nbsp;</span></span>
+                <span class="buttons active" id="elem2"><span class="button text">Home</span></span>
+                <span class="buttons" id="elem4"><span class="button text">Help</span></span>
+                <span class="buttons" id="elem5"><span class="button text">About</span></span>
+                <span class="buttons" id="elem6"><span class="button text">References</span></span>
+            </div>
+            <div class="expan" id="elem1a">
+                <div class="row">
+                    <div class="col-1 menu" onclick="window.open('localhost:5000','_blank');"><i class="material-icons">insert_drive_file</i><br>&nbsp;New</div>
+                    <div class="col-1 menu" onclick="save()"><a href="static/untitled.txt" download="Untitled"><i class="material-icons">save</i><br>&nbsp;Save</a></div>
+                    <div class="col-1 menu" onclick="window.print()"><i class="material-icons">print</i><br>&nbsp;Print</div>
+                    <div class="col-1 menu" onclick="pdf()">&nbsp;<i class="material-icons" style="padding-left: 12px;">picture_as_pdf</i><br>&nbsp;Save PDF</div>
+                    <div class="col-1 menu" onclick="document.getElementById('modal').style = 'display:block;'"><i class="material-icons">info</i><br>&nbsp;Info</div>
+                    <div class="col-7"></div>
+                </div>
+                <div class="modal" id="modal">
+                    <div class="cross float-right" onclick="document.getElementById('modal').style = 'display:none';">&times;</div>
+                    <h2 class="lead">
+                        <b>Info</b>
+                    </h2>
+                    <hr class="lead-4">
+                    <div class="details">
+                        Words: <span id="words"></span><br>
+                        Total Editing Time: <span id="time"></span><br>
+                        Total suggestions made: <span id="sugg"></span><br>
+                        Browser Agent: <span id="brwsr"></span><br>
+                    </div>
+                </div>
+            </div>
+            <div class="expan active1" id="elem2a">
+                <div class="row">
+                    <div class="col-1" style="padding-top: 7px;">
+                        <select id="font-size" class="form-control">
+                            <option value="12">10</option>
+                            <option value="14" selected="selected">14</option>
+                            <option value="16">16</option>
+                            <option value="24">24</option>
+                            <option value="32">32</option>
+                            <option value="64">64</option>
+                        </select>
+                    </div>
+                    <div class="col-2" style="padding-top: 7px;">
+                        <select id="font-face" class="form-control">
+                            <option value="'Anton', sans-serif" style="font-family: 'Anton', sans-serif;">Anton</option>
+                            <option value="'Fredoka One', cursive" style="font-family: 'Fredoka One', cursive;">Fredoka One</option>
+                            <option value="'Open Sans', sans-serif" selected="selected">Open Sans</option> 
+                            <option value="'Liu Jian Mao Cao', cursive" style="font-family: 'Liu Jian Mao Cao', cursive;">Liu Jian Mao Cao</option>
+                            <option value="'Merriweather', serif" style="font-family: 'Merriweather', serif;">Merriweather</option>
+                            <option value="'Raleway', sans-serif" style="font-family: 'Raleway', sans-serif;">Raleway</option>
+                            <option value="'Roboto', sans-serif" style="font-family: 'Roboto', sans-serif;">Roboto</option>
+                        </select>
+                    </div>
+                    <div class="col-2" style="padding-top: 8px; padding-left: 38px;">
+                        <span class="material-icons" style="padding:5px;border-radius: 2px;" id="bold" onclick="bold()">format_bold</span>
+                        <span class="material-icons" style="padding:5px;border-radius: 2px;" id="italic" onclick="italic()">format_italic</span>
+                        <span class="material-icons" style="padding:5px;border-radius: 2px;" id="underline" onclick="underline()">format_underline</span>
+                        <span class="material-icons" style="padding:5px;border-radius: 2px;" id="strike" onclick="strike()">format_strikethrough</span>
+                    </div>
+                    <div class="col-2" style="padding-top: 8px;">
+                        <span class="material-icons" style="padding:5px;border-radius: 2px;" id="left" onclick="left()" >format_align_left</span>
+                        <span class="material-icons" style="padding:5px;border-radius: 2px;" id="center" onclick="center()">format_align_center</span>
+                        <span class="material-icons" style="padding:5px;border-radius: 2px;" id="right" onclick="right()">format_align_right</span>
+                    </div> 
+                    <div class="col-5"></div>
+                </div>
+            </div>
+            <div class="expan" id="elem4a">
+                <div class="row">
+                    <div class="col-1 menu" onclick="document.getElementById('modal1').style = 'display:block;'"><i class="material-icons">help</i><br>&nbsp;Help</div>
+                    <div class="col-1 menu" onclick="document.getElementById('modal2').style = 'display:block;'"><i class="material-icons" style="padding-left: 22px;">accessibility_new</i><br>Accessibility</div>
+                </div>
+                <div class="modal" id="modal1">
+                    <div class="cross float-right" onclick="document.getElementById('modal1').style = 'display:none';">&times;</div>
+                       <h2 class="lead">
+                            <b>Help</b>
+                        </h2>
+                        <hr class="lead-4">
+                        <div class="details">
+                            <li>We have designed this app to help people write long words with ease.</li>
+                            <li>As of now we support only desktops and hopefully add more features.</li>
+                        </div>
+                </div>
+                <div class="modal" id="modal2">
+                    <div class="cross float-right" onclick="document.getElementById('modal2').style = 'display:none';">&times;</div>
+                       <h2 class="lead">
+                            <b>Accessibility</b>
+                        </h2>
+                        <hr class="lead-4">
+                        <div class="details">
+                            <li>To insert a suggestion use CTRL and Left Arrow key.</li>
+                            <li>To browse through the list of suggestions use CTRL and Down arrow key.</li>
+                        </div>
+                </div>    
+            </div>
+            <div class="expan" id="elem5a">
+                <div class="row">
+                    <div class="col-1 menu" onclick="document.getElementById('modal3').style = 'display:block;'"><i class="material-icons" style="padding-left: 10px;">new_releases</i><br>&nbsp;About</div>
+                    <div class="col-1 menu"><a href="https://github.com/whoanuragverma/word-predictor" target="blank"><i class="material-icons">code</i><br>Code</a></div>
+                </div>
+                <div class="modal large" id="modal3" >
+                    <div class="cross float-right" onclick="document.getElementById('modal3').style = 'display:none';">&times;</div>
+                       <h2 class="lead">
+                            <b>About</b>
+                        </h2>
+                        <hr class="lead-4">
+                        <div class="details">
+                            <li>The backend of this app uses C++ which basically creates a tree consisting of all the words in the dictionary.</li>
+                            <li>This backend C++ program is not so reliable for creating modern applications. So, A python server helps the UI and the backend C++ interact with each other. </li>
+                            <li>The python app thus creates a server consiting of an API. This API is used in the application with the help of AJAX.</li>
+                            <li>The Jquery layer then detects keypress and sends requests to the server.</li>
+                            <li>The server responds in JSON files which are displayed in result.</li>
+                        </div>
+                </div>    
+            </div>
+            <div class="expan" id="elem6a">
+                <div class="row">
+                    <div class="col-1 menu" onclick="document.getElementById('modal4').style = 'display:block;'">
+                        <i class="material-icons" style="padding-left: 10px;">https</i><br>License
+                    </div>
+                    <div class="col-2 menu" onclick="document.getElementById('modal5').style = 'display:block;'">
+                        <i class="material-icons" style="padding-left: 25px;">security</i><br>Other Legal
+                    </div>
+                </div>
+                <div class="modal large" id="modal5">
+                    <div class="cross float-right" onclick="document.getElementById('modal5').style = 'display:none';">&times;</div>
+                       <h2 class="lead">
+                            <b>Other Open Source Licences</b>
+                        </h2>
+                        <hr class="lead-4">
+                        <div class="details">
+                            Sweet softwares that helped us:
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/bootstrap.txt')}}','LICENSE','width=550,height=350')">Bootstrap</a></li>
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/jquery.txt')}}','LICENSE','width=550,height=350')">Jquery</a></li>
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/googleapis.txt')}}','LICENSE','width=550,height=350')">Google APIs</a></li>
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/materialize.txt')}}','LICENSE','width=550,height=350')">Materialize</a></li>
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/materialcomponents.txt')}}','LICENSE','width=550,height=350')">Material Components</a></li>
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/flask.txt')}}','LICENSE','width=550,height=350')">Flask</a></li>
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/popper.txt')}}','LICENSE','width=550,height=350')">Popper JS</a></li>
+                            <li><a href="javascript:window.open('{{url_for('static',filename='licenses/html2pdf.txt')}}','LICENSE','width=550,height=350')">html2pdf</a></li>
+                            <li>Special thanks to folks at <a href="https://stackoverflow.com" target="_blank">Stack Overflow</a></li>
+                        </div>
+                </div>  
+                <div class="modal scroll" id="modal4">
+                    <div class="cross float-right" onclick="document.getElementById('modal4').style = 'display:none';">&times;</div>
+                       <h2 class="lead">
+                            <b>License</b>
+                        </h2>
+                        <hr class="lead-4">
+                        <div class="details">
+                            <pre style="white-space: pre-line;">
+                                MIT License
+
+                                Copyright (c) 2020  Anurag Verma
+                                
+                                Permission is hereby granted, free of charge, to any person obtaining a copy
+                                of this software and associated documentation files (the "Software"), to deal
+                                in the Software without restriction, including without limitation the rights
+                                to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+                                copies of the Software, and to permit persons to whom the Software is
+                                furnished to do so, subject to the following conditions:
+                                
+                                The above copyright notice and this permission notice shall be included in all
+                                copies or substantial portions of the Software.
+                                
+                                THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+                                IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+                                FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+                                AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+                                LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+                                OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+                                SOFTWARE.
+                            </pre>
+                        </div>
+                </div>  
+            </div>
+        </div>
+
+        <div class="bck"></div>
+        <pre id="input" contenteditable="true"> <span id="getter"></span></span></pre>
+        <pre id="output"></pre>
+
+        <div id="ftr">
+            Words: <span id="wrds">0</span>
+            <span id="ping" class="float-right"></span>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script src="{{url_for('static',filename='jquery-3.4.1.min.js')}}"></script>
+    <script src="{{url_for('static',filename='caret.js')}}"></script>
+    <script src="{{url_for('static',filename='main.js')}}"></script>
+</body>
+
+</html>
