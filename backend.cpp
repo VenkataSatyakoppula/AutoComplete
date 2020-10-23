@@ -131,8 +131,6 @@ bool Trie::autoComplete(std::string s, std::vector<string> &res)
     parseTree(current,c,res,loop);
     return true;
 }
-
-
 void Trie::parseTree(Node *current, char *s,std::vector<string> &res,bool& loop)
 {
     char k[100]= {0};

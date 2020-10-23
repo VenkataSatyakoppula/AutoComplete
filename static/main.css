@@ -69,7 +69,7 @@ a{
     font-size: inherit;
 }
 #loader{
-    background-color:#1976d2;
+    background-color:#19d251;
     height: 100%;
     z-index: 1;
     color: #fff;
@@ -94,7 +94,7 @@ a{
     transform: translate(-50%,-50%);
 }
 .progress{
-    background-color: #1976d2;
+    background-color: #19d251;
     width: 550px;
     height: 3px;
 }
@@ -116,7 +116,7 @@ a{
     display: none;
 }
 .banner{
-    background-color: #1976d2;
+    background-color: #19d251;
     z-index: 2;
     position: fixed;
     width: 100%;
@@ -150,7 +150,7 @@ a{
     padding-bottom: 12px;
 }
 .buttons:not(.active):hover{
-    background-color: #0d47a1;
+    background-color: #19d251;
     transition-duration: 0.5s;
 }
 #ftr{
@@ -186,7 +186,7 @@ i{
     font-size: 28px !important;
 }
 .menu:hover{
-    color: #0057b3;
+    color: #19d251;
 }
 .large{
     width: 540px !important;
